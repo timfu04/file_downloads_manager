@@ -1,6 +1,5 @@
 # Import modules
 import os
-import time
 import shutil
 from configparser import ConfigParser
 from watchdog.observers import Observer
@@ -16,7 +15,6 @@ config.read(file)
 with OpenKey(HKEY_CURRENT_USER, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders') as key:
     source_path = QueryValueEx(key, '{374DE290-123F-4565-9164-39C4925E467B}')[0] 
 
-
 def is_file(file_dir:str)->bool:
     """ Check whether string is file or directory
 
@@ -25,11 +23,11 @@ def is_file(file_dir:str)->bool:
 
     Returns:
         bool: returns True if string is file, returns False if string is not file
-    """
-    
-    file_path = fr"{source_path}\{file_dir}"
+    """       
+    file_path = os.path.join(source_path,file_dir)
     return os.path.isfile(file_path)
 
+# Dictionary of supported extensions
 extensions = {"images":[".jpg", ".jpeg", ".jpe", ".jif", ".jfif", ".jfi", ".png", ".gif", ".webp", ".tiff", ".tif", ".psd", ".raw", ".arw", ".cr2", ".nrw", 
                        ".k25", ".bmp", ".dib", ".heif", ".heic", ".ind", ".indd", ".indt", ".jp2", ".j2k", ".jpf", ".jpf", ".jpx", ".jpm", ".mj2", ".svg", 
                        ".svgz", ".ai", ".eps", ".ico"],
@@ -45,21 +43,22 @@ class MonitorFolder(FileSystemEventHandler):
         files = list(filter(is_file, all_files_dirs))
         
         for file in files:
-            file_ext_no_dot = file.rsplit(".",1)[-1]
+            file_ext_no_dot = file.rsplit(".",1)[-1] # get file extension without dot
             file_ext_start_index = file.index(file_ext_no_dot)-1
             file_ext_with_dot = file[file_ext_start_index:].lower()
             
             for category, extension in extensions.items():
-                if file_ext_with_dot in extension:
-                    src_file_path = os.path.join(source_path, file)
-                    dest_folder_path = config["dest_path"][category]
-                    dest_file_path = os.path.join(dest_folder_path, file)
-            
-                    if os.path.exists(dest_file_path):
-                        os.remove(dest_file_path)
-                        shutil.move(src_file_path, dest_folder_path)
+                if file_ext_with_dot in extension: # if file extension with dot is included in supported extensions
+                    src_file_path = os.path.join(source_path, file) # source file path
+                    dest_folder_path = config["dest_path"][category] # destination folder path
+                    dest_file_path = os.path.join(dest_folder_path, file) # destination file path
+                    
+                    # Overwrite if file already exists
+                    if os.path.exists(dest_file_path): # if destination file path exists
+                        os.remove(dest_file_path) # remove file in destination file path
+                        shutil.move(src_file_path, dest_folder_path) # move file from source file path to destination file path
                     else:
-                        shutil.move(src_file_path, dest_folder_path)
+                        shutil.move(src_file_path, dest_folder_path) # move file from source file path to destination file path
         
 if __name__ == "__main__":
     event_handler = MonitorFolder()
