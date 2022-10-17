@@ -5,6 +5,11 @@ from configparser import ConfigParser
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
 from winreg import OpenKey, HKEY_CURRENT_USER, QueryValueEx
+from win10toast import ToastNotifier
+
+# Send Windows notification
+toast = ToastNotifier()
+toast.show_toast("File Downloads Manager", "The process has started", duration=30) # 30 seconds delay before notification self-destruction
 
 # Setup configuration file parser
 file = 'config.ini'
