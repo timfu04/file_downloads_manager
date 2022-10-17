@@ -22,9 +22,9 @@ def is_file(file_dir:str)->bool:
         file_dir (str): file or directory names
 
     Returns:
-        bool: returns True if string is file, returns False if string is not file
+        bool: returns True if string is file (with file extension), returns False if string is not file (no file extension)
     """       
-    file_path = os.path.join(source_path,file_dir)
+    file_path = os.path.join(source_path, file_dir)
     return os.path.isfile(file_path)
 
 # Dictionary of supported extensions
@@ -43,7 +43,7 @@ class MonitorFolder(FileSystemEventHandler):
         files = list(filter(is_file, all_files_dirs))
         
         for file in files:
-            file_ext_no_dot = file.rsplit(".",1)[-1] # get file extension without dot
+            file_ext_no_dot = file.rsplit(".", 1)[-1] # get file extension without dot
             file_ext_start_index = file.index(file_ext_no_dot)-1
             file_ext_with_dot = file[file_ext_start_index:].lower()
             
