@@ -18,4 +18,4 @@ An automation Python script that moves and sorts downloaded files to their speci
 
 # Instructions
 1. Add new destination folder paths in ***config.ini***
-2. Add new supported file extensions in `extensions` dictionary.
+2. Add new supported file extensions in `extensions` dictionary in ***main.py***.
