@@ -20,6 +20,7 @@ config.read(file)
 with OpenKey(HKEY_CURRENT_USER, 'SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders') as key:
     source_path = QueryValueEx(key, '{374DE290-123F-4565-9164-39C4925E467B}')[0] 
 
+# Function to check whether string given represents a file
 def is_file(file_dir:str)->bool:
     """ Check whether string is file or directory
 
@@ -39,7 +40,8 @@ extensions = {"images":[".jpg", ".jpeg", ".jpe", ".jif", ".jfif", ".jfi", ".png"
               "videos":[".webm", ".mpg", ".mp2", ".mpeg", ".mpe", ".mpv", ".ogg",".mp4", ".mp4v", ".m4v", ".avi", ".wmv", ".mov", ".qt", ".flv", ".swf", ".avchd"],
               "documents":[".doc", ".docx", ".odt", ".pdf", ".xls", ".xlsx", ".ppt", ".pptx", ".txt"],
               "compressed":[".7z", ".arj", ".deb", ".pkg", ".rar", ".rpm", ".tar", ".gz", ".z", ".zip"],
-              "torrents":[".torrent"]}
+              "torrents":[".torrent"],
+              "executables":[".exe"]}
 
 # Subclass of FileSystemEventHandler
 class MonitorFolder(FileSystemEventHandler):
